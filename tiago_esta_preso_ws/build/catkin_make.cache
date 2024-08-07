@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/mtb2/tiago_esta_preso_ws/devel -DCMAKE_INSTALL_PREFIX=/home/mtb2/tiago_esta_preso_ws/install -G Unix Makefiles

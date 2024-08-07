@@ -1,0 +1,8 @@
+prefix=/home/mtb2/mtb2_ws/install
+
+Name: teste1
+Description: Description of teste1
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

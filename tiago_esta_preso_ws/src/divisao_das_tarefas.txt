@@ -1,0 +1,13 @@
+Separando as atividades do robô por pacote
+
+Atividades a separar:
+ - Rangefinding com o laser
+ - Movimentos da base do robô (andar linha reta,
+girar 90 graus para direita ou esquerda)
+ - Orientação do robô(valor contínuo para contar
+quantos giros completos foram realizados??)
+ - Rotacionar a cabeça com a câmera e 
+capturar/processar as imagens
+ - Controlar o braço para sinalizar que chegou
+ao final do labirinto
+ - Implementar a máquina de estados
