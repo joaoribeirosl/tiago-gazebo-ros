@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 import rospy
-from math import sin, cos
+from math import pi, sin, cos
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -106,44 +106,45 @@ class myRobot():
     def turn(self, sens):
         print('turn')
         # sens pode ser comando direita/esquerda?
-        if sens == 'direita':
-            self.cmd_base.linear.x = 1
-            self.cmd_base.angular.z = 0
-
-        elif sens == 'esquerda':
-
-            cmd = Twist() # fix!
-
+        
         rate = rospy.Rate(1)  # 1 hz de frequência de publicar comandos
         count = 0
-        while not rospy.is_shutdown():
-            if count % 2 == 0:
-                pass  
-            else:
-                self.cmd_base.linear.x = 0
+        while not rospy.is_shutdown(): # and cond to stop turn
+            if sens == 'direita':
                 self.cmd_base.angular.z = 1
-            self.publ_base.publish(cmd)
+                rate.sleep()
+
+            elif sens == 'esquerda':
+                self.cmd_base.angular.z = -1
+                rate.sleep()
             count += 1
             rate.sleep()
+            self.publ_base.publish(self.cmd_base)
         # error = ...
         # while(abs(error) < value):
 
     def decision(self):
         print('decision')
-        front_dist = min(self.ranges)
-
-        # if dist_right < 1.5 and dist_left < 1.5:
-        #     self.move_straight(1.0)
-        # elif dist_front < 1.5:
-        #     if dist_left > dist_right:
-        #         self.turn(pi/2)
-        #     else:
-        #         self.turn(-pi/2)
-        # else:
-        #     self.cmd_head.angular.z = 0.1
-        #     self.publ_head.publish(self.cmd_head)
-        #     rospy.sleep(1)
+        dist_front = min(self.ranges)
+        dist_right = 0 # get dist_right
+        dist_left = 0 # get dist_left
         
+
+
+        # decides what action (move straight, turn or process img)    
+        if dist_right < 1.5 and dist_left < 1.5:
+            self.move_straight(1.0)
+        elif dist_front < 1.5:
+            if dist_left > dist_right:
+                self.turn(pi/2)
+            else:
+                self.turn(-pi/2)
+        else:
+            pass
+            # self.cmd_head.angular.z = 0.1
+            # self.publ_head.publish(self.cmd_head)
+            # rospy.sleep(1)
+
 
 if __name__ == '__main__':
 
@@ -153,21 +154,15 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown(): # test
         tiago.move_straight(-10)
-    
-    
-    # state = 0
+        
+    state = 0
 
-    
-    # while(...):
-     # if state == 0:
-        # decision
-        # compute next state
-     # else if state == 1
-        # image porcessing
-        # compute next state
-     # else if state == 3
-        # move straight
-        # compute next state
-     # else if state == 4
-        # turn
-        # compute next state
+    while(True):
+        if state == 0:
+            tiago.decision()
+        elif state == 1:
+            pass # process img
+        elif state == 2:
+            tiago.move_straight(1.0)
+        elif state == 3:
+            tiago.turn()
